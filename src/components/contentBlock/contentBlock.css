@@ -1,0 +1,100 @@
+.blendmesh-content-block {
+    border: 1px solid #D0D0D0;
+    border-radius: 6px;
+    padding: 10px;
+    background: #F1F3F4;
+    color: #454545;
+}
+
+.blendmesh-content-block .separator {
+    border-top: 1.5px solid #ccc;
+    width: 100%;
+    margin-top: 6px;
+}
+
+/* .blendmesh-content-block .element{ 
+    display: "flex";
+    font-size: small;
+    vertical-align: middle;
+}
+  
+.blendmesh-content-block input[type=text], input[type=number], input[type=color], select, textarea{ 
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+  
+.blendmesh-content-block .element label{ 
+    font-weight: 600;
+} */
+
+.blendmesh-content-block .col-10 {
+    float: left;
+    width: 10%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-20 {
+    float: left;
+    width: 20%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-30 {
+    float: left;
+    width: 30%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-40 {
+    float: left;
+    width: 40%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-50 {
+    float: left;
+    width: 50%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-60 {
+    float: left;
+    width: 60%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-70 {
+    float: left;
+    width: 70%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-80 {
+    float: left;
+    width: 80%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-90 {
+    float: left;
+    width: 90%;
+    margin-top: 6px;
+}
+
+.blendmesh-content-block .col-100 {
+    float: left;
+    width: 100%;
+    margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.blendmesh-content-block .row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+  
+
+  

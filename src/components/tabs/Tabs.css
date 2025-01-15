@@ -1,0 +1,38 @@
+/* tabs */
+.blendmesh-tab-component {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #ccc;
+    width: 100%;
+    font-size: 14px;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.blendmesh-tab-component .tab {
+    flex: 1 1 auto;
+    text-align: center;
+}
+
+.blendmesh-tab-component .tab input {
+    display: none;
+}
+
+.blendmesh-tab-component .tab .name {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #bbb;
+    padding: .5rem 0;
+    color: rgba(51, 65, 85, .5);
+    transition: all .15s ease-in-out;
+}
+
+.blendmesh-tab-component .tab input:checked+.name {
+    background-color: #F1F3F4;
+    font-weight: 600;
+    color: #454545;
+    border: 1px solid #F1F3F4;
+}

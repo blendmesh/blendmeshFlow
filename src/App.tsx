@@ -13,6 +13,9 @@ import {
 import '@xyflow/react/dist/style.css';
 import DevTools from './components/devtools/Devtools';
 import ContextMenu from './components/ContextMenu';
+import Tabs, { TabContent } from './components/tabs/Tabs';
+import  Checkbox  from './components/forms/Checkbox';
+import Form from './components/forms/forms';
  
 const initialNodes = [
   { id: '1', type: "input", position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -37,126 +40,179 @@ export default function App() {
   function menuDebug (){
     return (
       <div
-        style={{
-          width: '200px',
-          height: 'auto',
-          border: '1px solid black',
-          borderRadius: '5px',
-          padding: '5px',
-          background: '#ffffff'
-        }}
+        className='panel-debug'
       >
+        
+      <Tabs tabbed={["tab1","tab2", "tab3"]}>
+        <TabContent content="tab1">
+          <div className='element row'>
+            <div className='col-25'>
+              <label>variant</label>
+            </div>
+            <div className='col-75'>
+              <select value={variant} onChange={e => setVariant(e.target.value)}>
+                <option value="dots">dots</option>
+                <option value="lines">lines</option>
+                <option value="cross">cross</option>
+              </select>
+            </div>
+          </div>
 
-        <div style={{ display: "flex" }}>
-          <label>Panel position:</label>
-          <select value={panelPosition} onChange={e => setPanelPosition(e.target.value)}>
-            <option value="top-left">top-left</option>
-            <option value="top-center">top-center</option>
-            <option value="top-right">top-right</option>
-            <option value="bottom-left">bottom-left</option>
-            <option value="bottom-center">bottom-center</option>
-            <option value="bottom-right">bottom-right</option>
-          </select>
+          <div className='element row'>
+            <div className='col-25'>
+              <label>grid color</label>
+            </div>
+            <div className='col-75'>
+              <input type="color" value={gridColor} onChange={e => setGridColor(e.target.value)} />
+            </div>
+          </div>
+
+          <div className='element row'>
+            <div className='col-25'>
+              <label>grid size</label>
+            </div>
+            <div className='col-75'>
+              <input type="number" value={gridSize} onChange={e => setGridSize(e.target.value)} />
+            </div>
+          </div>
+
+          <div className='element row'>
+            <div className='col-25'>
+              <label>grid gap</label>
+            </div>
+            <div className='col-75'>
+              <input type="number" value={gridGap} onChange={e => setGridGap(e.target.value)} />
+            </div>
+          </div>
+        </TabContent>
+        <TabContent content="tab2" >
+          <Form>
+            <Checkbox label="teste checkbox" >
+
+            </Checkbox>
+          </Form>
+        </TabContent>
+      </Tabs>
+
+        <div className='element row'>
+          <div className='col-25'>
+            <label>Panel position</label>
+          </div>
+          <div className='col-75'>
+            <select value={panelPosition} onChange={e => setPanelPosition(e.target.value)}>
+              <option value="top-left">top-left</option>
+              <option value="top-center">top-center</option>
+              <option value="top-right">top-right</option>
+              <option value="bottom-left">bottom-left</option>
+              <option value="bottom-center">bottom-center</option>
+              <option value="bottom-right">bottom-right</option>
+            </select>
+          </div>
         </div>
 
-        <hr />
+        <div className='separator'/>
 
-        <div style={{ display: "flex" }}>
-          <label>variant:</label>
-          <select value={variant} onChange={e => setVariant(e.target.value)}>
-            <option value="dots">dots</option>
-            <option value="lines">lines</option>
-            <option value="cross">cross</option>
-          </select>
+
+
+        <div className='separator'/>
+
+        <div className='element row'>
+          <div className='col-25'>
+            <label>Control orientation</label>
+          </div>
+          <div className='col-75'>
+            <select value={controlOrientation} onChange={e => setControlOrientation(e.target.value)}>
+              <option value="horizontal">horizontal</option>
+              <option value="vertical">vertical</option>
+            </select>
+          </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>grid color:</label>
-          <input type="color" value={gridColor} onChange={e => setGridColor(e.target.value)} />
+        <div className='element row'>
+          <div className='col-25'>
+            <label>Control position</label>
+          </div>
+
+          <div className='col-75'>
+            <select value={controlPosition} onChange={e => setControlPosition(e.target.value)}>
+              <option value="top-left">top-left</option>
+              <option value="top-center">top-center</option>
+              <option value="top-right">top-right</option>
+              <option value="bottom-left">bottom-left</option>
+              <option value="bottom-center">bottom-center</option>
+              <option value="bottom-right">bottom-right</option>
+            </select>
+          </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>grid size:</label>
-          <input type="number" value={gridSize} onChange={e => setGridSize(e.target.value)} />
+        <div className='element row'>
+          <div className='col-100'>
+            <input type="checkbox" checked={controlShowZoom} onChange={e => setControlShowZoom(e.target.checked)} />
+            <label>Control show zoom</label>
+          </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>grid gap:</label>
-          <input type="number" value={gridGap} onChange={e => setGridGap(e.target.value)} />
+        <div className='element row'>
+          <div className='col-100'>
+            <input type="checkbox" checked={controlShowFitView} onChange={e => setControlShowFitView(e.target.checked)} />
+            <label>Control show FitView</label>
+          </div>
         </div>
 
-        <hr />
-
-        <div style={{ display: "flex" }}>
-          <label>Control orientation:</label>
-          <select value={controlOrientation} onChange={e => setControlOrientation(e.target.value)}>
-            <option value="horizontal">horizontal</option>
-            <option value="vertical">vertical</option>
-          </select>
+        <div className='element row'>
+          <div className='col-100'>
+            <input type="checkbox" checked={controlShowInteractive} onChange={e => setControlShowInteractive(e.target.checked)} />
+            <label>Control show Interactive</label>
+          </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>Control position:</label>
-          <select value={controlPosition} onChange={e => setControlPosition(e.target.value)}>
-            <option value="top-left">top-left</option>
-            <option value="top-center">top-center</option>
-            <option value="top-right">top-right</option>
-            <option value="bottom-left">bottom-left</option>
-            <option value="bottom-center">bottom-center</option>
-            <option value="bottom-right">bottom-right</option>
-          </select>
+        <div className='separator'/>
+
+        <div className='element row'>
+          <div className='col-25'>
+            <label>Minimap position</label>
+          </div>
+          <div className='col-75'>
+            <select value={minimapPosition} onChange={e => setMinimapPosition(e.target.value)}>
+              <option value="top-left">top-left</option>
+              <option value="top-center">top-center</option>
+              <option value="top-right">top-right</option>
+              <option value="bottom-left">bottom-left</option>
+              <option value="bottom-center">bottom-center</option>
+              <option value="bottom-right">bottom-right</option>
+            </select>
+          </div>
+
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>Control show zoom:</label>
-          <input type="checkbox" checked={controlShowZoom} onChange={e => setControlShowZoom(e.target.checked)} />
+        <div className='separator'/>
+
+        <div className='element row'>
+          <div className='col-100'>
+            <input type="checkbox" checked={devtools} onChange={e => setDevtools(e.target.checked)} />
+            <label>Devtools</label>
+          </div>
+        </div>
+        <div className='element row'>
+          <div className='col-100'>
+            <input type="checkbox" checked={snapToGrid} onChange={e => setSnapToGrid(e.target.checked)} />
+            <label>Snap to grid</label>
+          </div>
         </div>
 
-        <div style={{ display: "flex" }}>
-          <label>Control show FitView:</label>
-          <input type="checkbox" checked={controlShowFitView} onChange={e => setControlShowFitView(e.target.checked)} />
+        <div className='element row'>
+          <div className='col-25'>
+            <label>color Mode</label>
+          </div>
+
+          <div className='col-75'>
+            <select value={colorMode} onChange={e => setColorMode(e.target.value)}>
+              <option value="system">system</option>
+              <option value="light">light</option>
+              <option value="dark">dark</option>
+            </select>
+          </div>
         </div>
-
-        <div style={{ display: "flex" }}>
-          <label>Control show Interactive:</label>
-          <input type="checkbox" checked={controlShowInteractive} onChange={e => setControlShowInteractive(e.target.checked)} />
-        </div>
-
-        <hr />
-
-        <div style={{ display: "flex" }}>
-          <label>Minimap position:</label>
-          <select value={minimapPosition} onChange={e => setMinimapPosition(e.target.value)}>
-            <option value="top-left">top-left</option>
-            <option value="top-center">top-center</option>
-            <option value="top-right">top-right</option>
-            <option value="bottom-left">bottom-left</option>
-            <option value="bottom-center">bottom-center</option>
-            <option value="bottom-right">bottom-right</option>
-          </select>
-        </div>
-
-        <hr />
-
-        <div style={{ display: "flex" }}>
-          <label>Devtools:</label>
-          <input type="checkbox" checked={devtools} onChange={e => setDevtools(e.target.checked)} />
-        </div>
-
-        <div style={{ display: "flex" }}>
-          <label>color Mode:</label>
-          <select value={colorMode} onChange={e => setColorMode(e.target.value)}>
-            <option value="system">system</option>
-            <option value="light">light</option>
-            <option value="dark">dark</option>
-          </select>
-        </div>
-
-        <div style={{ display: "flex" }}>
-          <label>Snap to grid:</label>
-          <input type="checkbox" checked={snapToGrid} onChange={e => setSnapToGrid(e.target.checked)} />
-        </div>
-          
       </div>
     )
   }
