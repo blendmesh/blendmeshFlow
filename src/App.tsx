@@ -12,14 +12,16 @@ import {
 
 import '@xyflow/react/dist/style.css';
 import DevTools from './components/devtools/Devtools';
-import ContextMenu from './components/ContextMenu';
+import ContextMenu from './components/contextMenu/ContextMenu';
 import Tabs, { TabContent } from './components/tabs/Tabs';
-import Checkbox from './components/forms/Checkbox';
 import Form from './components/forms/Forms';
-import Color from './components/forms/Color';
 import Grid from './modules/viewport/Grid';
-import Select, { Position } from './components/forms/Select';
 import { useViewportStore } from './store/viewport';
+import Separator from './components/forms/Separator';
+import Control from './modules/viewport/Control';
+import Minimap from './modules/viewport/Minimap';
+import Select, { Position, Theme } from './components/forms/Select';
+import Checkbox from './components/forms/Checkbox';
 
 const initialNodes = [
   { id: '1', type: "input", position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -47,106 +49,39 @@ export default function App() {
         className='panel-debug'
       >
 
-        <Tabs tabbed={["viewport", "tab2", "tab3"]}>
+        <Tabs tabbed={["viewport", "debug"]}>
           <TabContent content="viewport">
+            <Select
+              label={"Position"}
+              isValue={generalView.panelPosition}
+              onChange={e => generalView.updatePanelPosition(e.target.value)}
+            >
+              <Position/>
+            </Select>
+            <Select
+              label={"Theme color"}
+              isValue={generalView.themeColor}
+              onChange={e=>generalView.updateThemeColor(e.target.value)}
+            >
+              <Theme/>
+            </Select>
+            <Checkbox
+              isChecked={generalView.snapToGrid}
+              onChange={e=>generalView.updateSnapToGrid(e.target.checked)}
+            >
+              Snap to grid
+            </Checkbox>
+            <Separator/>
             <Grid />
+            <Separator/>
+            <Control/>
+            <Separator/>
+            <Minimap/>
+            <Separator/>
           </TabContent>
 
-          <TabContent content="tab2" >
+          <TabContent content="debug" >
             <Form>
-
-        <div className='element row'>
-          <div className='col-25'>
-            <label>Panel position</label>
-          </div>
-          <div className='col-75'>
-            <select value={panelPosition} onChange={e => setPanelPosition(e.target.value)}>
-              <option value="top-left">top-left</option>
-              <option value="top-center">top-center</option>
-              <option value="top-right">top-right</option>
-              <option value="bottom-left">bottom-left</option>
-              <option value="bottom-center">bottom-center</option>
-              <option value="bottom-right">bottom-right</option>
-            </select>
-          </div>
-        </div>
-
-        <div className='separator' />
-
-
-
-        <div className='separator' />
-
-        <div className='element row'>
-          <div className='col-25'>
-            <label>Control orientation</label>
-          </div>
-          <div className='col-75'>
-            <select value={controlOrientation} onChange={e => setControlOrientation(e.target.value)}>
-              <option value="horizontal">horizontal</option>
-              <option value="vertical">vertical</option>
-            </select>
-          </div>
-        </div>
-
-        <div className='element row'>
-          <div className='col-25'>
-            <label>Control position</label>
-          </div>
-
-          <div className='col-75'>
-            <select value={controlPosition} onChange={e => setControlPosition(e.target.value)}>
-              <option value="top-left">top-left</option>
-              <option value="top-center">top-center</option>
-              <option value="top-right">top-right</option>
-              <option value="bottom-left">bottom-left</option>
-              <option value="bottom-center">bottom-center</option>
-              <option value="bottom-right">bottom-right</option>
-            </select>
-          </div>
-        </div>
-
-        <div className='element row'>
-          <div className='col-100'>
-            <input type="checkbox" checked={controlShowZoom} onChange={e => setControlShowZoom(e.target.checked)} />
-            <label>Control show zoom</label>
-          </div>
-        </div>
-
-        <div className='element row'>
-          <div className='col-100'>
-            <input type="checkbox" checked={controlShowFitView} onChange={e => setControlShowFitView(e.target.checked)} />
-            <label>Control show FitView</label>
-          </div>
-        </div>
-
-        <div className='element row'>
-          <div className='col-100'>
-            <input type="checkbox" checked={controlShowInteractive} onChange={e => setControlShowInteractive(e.target.checked)} />
-            <label>Control show Interactive</label>
-          </div>
-        </div>
-
-        <div className='separator' />
-
-        <div className='element row'>
-          <div className='col-25'>
-            <label>Minimap position</label>
-          </div>
-          <div className='col-75'>
-            <select value={minimapPosition} onChange={e => setMinimapPosition(e.target.value)}>
-              <option value="top-left">top-left</option>
-              <option value="top-center">top-center</option>
-              <option value="top-right">top-right</option>
-              <option value="bottom-left">bottom-left</option>
-              <option value="bottom-center">bottom-center</option>
-              <option value="bottom-right">bottom-right</option>
-            </select>
-          </div>
-
-        </div>
-
-        <div className='separator' />
 
         <div className='element row'>
           <div className='col-100'>
@@ -154,27 +89,6 @@ export default function App() {
             <label>Devtools</label>
           </div>
         </div>
-        <div className='element row'>
-          <div className='col-100'>
-            <input type="checkbox" checked={snapToGrid} onChange={e => setSnapToGrid(e.target.checked)} />
-            <label>Snap to grid</label>
-          </div>
-        </div>
-
-        <div className='element row'>
-          <div className='col-25'>
-            <label>color Mode</label>
-          </div>
-
-          <div className='col-75'>
-            <select value={colorMode} onChange={e => setColorMode(e.target.value)}>
-              <option value="system">system</option>
-              <option value="light">light</option>
-              <option value="dark">dark</option>
-            </select>
-          </div>
-        </div>
-
             </Form>
           </TabContent>
         </Tabs>
@@ -188,21 +102,13 @@ export default function App() {
     background1,
     background2,
     control,
-    minimap
+    minimap,
+    generalView
   } = useViewportStore()
 
 
 
-  const [controlOrientation, setControlOrientation] = useState('vertical');
-  const [controlPosition, setControlPosition] = useState('bottom-left');
-  const [minimapPosition, setMinimapPosition] = useState('bottom-right');
-  const [panelPosition, setPanelPosition] = useState('top-right');
-  const [controlShowZoom, setControlShowZoom] = useState(true);
-  const [controlShowFitView, setControlShowFitView] = useState(true);
-  const [controlShowInteractive, setControlShowInteractive] = useState(true);
   const [devtools, setDevtools] = useState(false);
-  const [colorMode, setColorMode] = useState('light');
-  const [snapToGrid, setSnapToGrid] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -247,22 +153,30 @@ export default function App() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        colorMode={colorMode}
-        snapToGrid={snapToGrid}
-        snapGrid={[12, 12]}
+        colorMode={generalView.themeColor}
+        snapToGrid={generalView.snapToGrid}
+        snapGrid={[generalView.snapGridSize, generalView.snapGridSize]}
         onPaneClick={onPaneClick}
         onNodeContextMenu={onNodeContextMenu}
       >
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-        <Panel position={panelPosition}>
+        <Panel position={generalView.panelPosition}>
           {menuDebug()}
         </Panel>
         {devtools ? <DevTools /> : false}
-        <Controls orientation={controlOrientation}
-        //  position={variant} 
-         showZoom={controlShowZoom} showFitView={controlShowFitView} showInteractive={controlShowInteractive} />
-        <MiniMap nodeColor={nodeColor} nodeStrokeWidth={13} zoomable pannable 
-        // position={position} 
+        <Controls
+          orientation={control.orientation}
+          position={control.position} 
+          showZoom={control.showZoom}
+          showFitView={control.showFitView}
+          showInteractive={control.showInteractive}
+        />
+        <MiniMap
+          nodeColor={nodeColor}
+          nodeStrokeWidth={minimap.nodeStrokeWidth}
+          zoomable={minimap.zoomable}
+          pannable={minimap.pannable} 
+          position={minimap.position} 
         />
         {background1.enabled && 
           <Background

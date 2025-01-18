@@ -1,4 +1,16 @@
 import {create } from 'zustand'
+import { Position } from '../components/forms/Select';
+
+type GeneralView = {
+    panelPosition: string;
+    snapToGrid: boolean;
+    themeColor: string;
+    snapGridSize: number;
+    updatePanelPosition: (position: string) => void;
+    updateSnapToGrid: (enable: boolean) => void;
+    updateThemeColor: (theme: string) => void;
+    updateSnapGridSize: (size: number) => void;
+}
 
 type Background = {
     variant: string;
@@ -19,9 +31,13 @@ type Minimap = {
     position: string;
     // nodeColor: string;
     nodeStrokeWidth: number;
+    pannable: boolean;
+    zoomable: boolean;
     updatePosition: (text: string) => void;
     // updateColor: (color: string) => void;
     updateStrokeWidth: (width: number) => void;
+    updatePannable: (enable: boolean) => void;
+    updateZoomable: (enable: boolean) => void;
 }
 
 type Control = {
@@ -42,6 +58,7 @@ type Viewport = {
     background2: Background;
     minimap: Minimap;
     control: Control;
+    generalView: GeneralView;
 }
 
 export const useViewportStore = create<Viewport>((set) => ({
@@ -137,6 +154,8 @@ export const useViewportStore = create<Viewport>((set) => ({
         position: "bottom-right",
         // nodeColor: "",
         nodeStrokeWidth: 1,
+        pannable: false,
+        zoomable: false,
         updatePosition: (text) => set((state) => ({
             minimap: {
                 ...state.minimap,
@@ -154,6 +173,18 @@ export const useViewportStore = create<Viewport>((set) => ({
                 ...state.minimap,
                 nodeStrokeWidth: width
            } 
+        })),
+        updatePannable: (enable) => set((state) => ({
+            minimap: {
+                ...state.minimap,
+                pannable: enable
+            }
+        })),
+        updateZoomable: (enable) => set((state) => ({
+            minimap: {
+                ...state.minimap,
+                zoomable: enable
+            }
         })),
     },
     control:{
@@ -192,5 +223,36 @@ export const useViewportStore = create<Viewport>((set) => ({
                 showInteractive: enable
             }
         })),
+    },
+    generalView:{
+        panelPosition: "top-right",
+        snapToGrid: false,
+        themeColor: "light",
+        snapGridSize: 12,
+        updatePanelPosition: (position) => set((state) => ({
+            generalView:{
+                ...state.generalView,
+                panelPosition: position
+            }
+        })),
+        updateSnapToGrid: (enable) => set((state) => ({
+            generalView: {
+                ...state.generalView,
+                snapToGrid: enable
+            }
+        })),
+        updateThemeColor: (theme) => set((state) => ({
+            generalView:{
+                ...state.generalView,
+                themeColor: theme
+            }
+        })),
+        updateSnapGridSize: (size) => set((state) => ({
+            generalView:{
+                ...state.generalView,
+                snapGridSize: size
+            }
+        })),
     }
+    
 }))

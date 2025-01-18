@@ -6,6 +6,8 @@ import {
     type HTMLAttributes,
   } from 'react';
   import { Panel } from '@xyflow/react';
+
+  import "./Devtools.css"
    
   import NodeInspector from './NodeInspector';
   import ChangeLogger from './ChangeLogger';

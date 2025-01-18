@@ -47,3 +47,13 @@ export function Orientation() {
         </>
     )
 }
+
+export function Theme() {
+    return (
+        <>
+            <option value="system">system</option>
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+        </>
+    )
+}
