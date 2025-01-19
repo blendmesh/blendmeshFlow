@@ -82,7 +82,7 @@ import {
         <div>
           dimensions: {width} × {height}
         </div>
-        <div>data: {JSON.stringify(data, null, 2)}</div>
+        <pre>data: {JSON.stringify(data, null, 2)}</pre>
       </div>
     );
   }

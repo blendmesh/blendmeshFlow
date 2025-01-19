@@ -6,98 +6,30 @@ import {
   Background,
   useNodesState,
   useEdgesState,
-  addEdge,
-  Panel
+  addEdge
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import DevTools from './components/devtools/Devtools';
+import DevMode from './modules/devMode/devMode';
 import ContextMenu from './components/contextMenu/ContextMenu';
-import Tabs, { TabContent } from './components/tabs/Tabs';
-import Form from './components/forms/Forms';
-import Grid from './modules/viewport/Grid';
 import { useViewportStore } from './store/viewport';
-import Separator from './components/forms/Separator';
-import Control from './modules/viewport/Control';
-import Minimap from './modules/viewport/Minimap';
-import Select, { Position, Theme } from './components/forms/Select';
-import Checkbox from './components/forms/Checkbox';
+import { Panel } from '@xyflow/react';
 
 const initialNodes = [
-  { id: '1', type: "input", position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-  { id: '3', type: "output", position: { x: 0, y: 200 }, data: { label: '3' } },
+  { id: '1', type: "input", position: { x: 0, y: 0 }, data: { label: '1', colorMap: "#6ede87"  } },
+  { id: '2', position: { x: 0, y: 100 }, data: { label: '2', colorMap: "#ff0072"  }},
+  { id: '3', type: "output", position: { x: 0, y: 200 }, data: { label: '3', colorMap: "#6865A5" } },
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 const nodeColor = (node) => {
-  switch (node.type) {
-    case 'input':
-      return '#6ede87';
-    case 'output':
-      return '#6865A5';
-    default:
-      return '#ff0072';
-  }
+  return node.data.colorMap
 };
 
+const flowKey = 'example-flow';
+
 export default function App() {
-
-  function menuDebug() {
-    return (
-      <div
-        className='panel-debug'
-      >
-
-        <Tabs tabbed={["viewport", "debug"]}>
-          <TabContent content="viewport">
-            <Select
-              label={"Position"}
-              isValue={generalView.panelPosition}
-              onChange={e => generalView.updatePanelPosition(e.target.value)}
-            >
-              <Position/>
-            </Select>
-            <Select
-              label={"Theme color"}
-              isValue={generalView.themeColor}
-              onChange={e=>generalView.updateThemeColor(e.target.value)}
-            >
-              <Theme/>
-            </Select>
-            <Checkbox
-              isChecked={generalView.snapToGrid}
-              onChange={e=>generalView.updateSnapToGrid(e.target.checked)}
-            >
-              Snap to grid
-            </Checkbox>
-            <Separator/>
-            <Grid />
-            <Separator/>
-            <Control/>
-            <Separator/>
-            <Minimap/>
-            <Separator/>
-          </TabContent>
-
-          <TabContent content="debug" >
-            <Form>
-
-        <div className='element row'>
-          <div className='col-100'>
-            <input type="checkbox" checked={devtools} onChange={e => setDevtools(e.target.checked)} />
-            <label>Devtools</label>
-          </div>
-        </div>
-            </Form>
-          </TabContent>
-        </Tabs>
-
-        
-      </div>
-    )
-  }
-
   const {
     background1,
     background2,
@@ -106,13 +38,16 @@ export default function App() {
     generalView
   } = useViewportStore()
 
-
-
-  const [devtools, setDevtools] = useState(false);
-
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  // save and restore
+  const [ rfInstance, setRfInstance] = useState(null);
+  // const Viewport = useReactFlow()
+  const [file, setFile] = useState();
+  const fileRef = useRef()
+
+  // context menu
   const [menu, setMenu] = useState(null);
   const ref = useRef(null);
 
@@ -121,6 +56,66 @@ export default function App() {
     [setEdges],
   );
 
+  // save and restore
+  const onSave = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem(flowKey, JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+
+  const onRestore = useCallback(() => {
+    const restoreFlow = async () => {
+      const flow = JSON.parse(localStorage.getItem(flowKey));
+
+      if (flow) {
+        const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+        // setViewport({ x, y, zoom });
+      }
+    };
+
+    restoreFlow();
+  }, [setNodes]);
+
+  const exportData = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+
+      const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+        JSON.stringify(flow)
+      )}`;
+      const link = document.createElement("a");
+      link.href = jsonString;
+      link.download = "data.json";
+  
+      link.click();
+    }
+  }, [rfInstance]);
+
+  const onChangeFile = useCallback((e) => {
+    const restoreFlow = async (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const fileReader = new FileReader();
+        fileReader.readAsText(e.target.files[0], "UTF-8");
+        fileReader.onload = e => {
+          const target = e.target;
+          const flow = JSON.parse(target?.result);
+
+          console.log(flow)
+          const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+          setNodes(flow.nodes || []);
+          setEdges(flow.edges || []);
+          // setViewport({ x, y, zoom });
+        }
+      }
+    };
+
+    restoreFlow(e);
+  }, [setNodes]);
+
+  // context menu
   const onNodeContextMenu = useCallback(
     (event, node) => {
       // Prevent native context menu from showing
@@ -158,12 +153,29 @@ export default function App() {
         snapGrid={[generalView.snapGridSize, generalView.snapGridSize]}
         onPaneClick={onPaneClick}
         onNodeContextMenu={onNodeContextMenu}
+        fitView
+        fitViewOptions={{ padding: 2 }}
+        style={{ backgroundColor: generalView.backgroundColor }}
+        onInit={setRfInstance}
       >
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-        <Panel position={generalView.panelPosition}>
-          {menuDebug()}
-        </Panel>
-        {devtools ? <DevTools /> : false}
+
+        { generalView.devtools && <DevTools />}
+        { generalView.devtools && 
+          <Panel position="top-center">
+            <button onClick={onSave}>save</button>
+            <button onClick={onRestore}>restore</button>
+            <button onClick={exportData}>download</button>
+            <input
+              type="file"
+              id="input_json"
+              ref={fileRef}
+              onChange={onChangeFile}
+            />
+          </Panel>
+        }
+
+        <DevMode />
         <Controls
           orientation={control.orientation}
           position={control.position} 
@@ -188,7 +200,6 @@ export default function App() {
             lineWidth={background1.lineWidth}
           />
         }
-        
         {background2.enabled && 
           <Background
             id={2}

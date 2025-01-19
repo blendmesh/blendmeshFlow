@@ -1,13 +1,15 @@
-import Color from "../../components/forms/Color";
-import Form from "../../components/forms/Forms";
-import Select, { Variant } from "../../components/forms/Select";
-import Number from "../../components/forms/Number";
-import { useViewportStore } from "../../store/viewport";
-import FormGroup from "../../components/forms/formGroup";
-import Checkbox from "../../components/forms/Checkbox";
+import Color from "../../../components/forms/Color";
+import Form from "../../../components/forms/Forms";
+import Select, { Variant } from "../../../components/forms/Select";
+import Number from "../../../components/forms/Number";
+import Checkbox from "../../../components/forms/Checkbox";
+import FormGroup from "../../../components/forms/FormGroup";
+
+import { useViewportStore } from "../../../store/viewport";
+import Separator from "../../../components/forms/Separator";
 
 export default function Grid() {
-    const { 
+    const {
         background1,
         background2
     } = useViewportStore()
@@ -42,6 +44,7 @@ export default function Grid() {
                 </Number>
             </FormGroup>
 
+            <Separator/>
             <Checkbox
                 isChecked={background2.enabled}
                 onChange={e => background2.updateEnabled(e.target.checked)}

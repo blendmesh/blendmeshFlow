@@ -1,15 +1,18 @@
 import {create } from 'zustand'
-import { Position } from '../components/forms/Select';
 
 type GeneralView = {
     panelPosition: string;
     snapToGrid: boolean;
     themeColor: string;
     snapGridSize: number;
+    devtools: boolean;
+    backgroundColor: string;
     updatePanelPosition: (position: string) => void;
     updateSnapToGrid: (enable: boolean) => void;
     updateThemeColor: (theme: string) => void;
     updateSnapGridSize: (size: number) => void;
+    updateDevtools: (enable: boolean) => void;
+    updateBackgroundColor: (color: string) => void;
 }
 
 type Background = {
@@ -229,6 +232,8 @@ export const useViewportStore = create<Viewport>((set) => ({
         snapToGrid: false,
         themeColor: "light",
         snapGridSize: 12,
+        devtools: false,
+        backgroundColor: "#F7F9FB",
         updatePanelPosition: (position) => set((state) => ({
             generalView:{
                 ...state.generalView,
@@ -253,6 +258,17 @@ export const useViewportStore = create<Viewport>((set) => ({
                 snapGridSize: size
             }
         })),
+        updateDevtools: (enable) => set((state) => ({
+            generalView:{
+                ...state.generalView,
+                devtools: enable
+            }
+        })),
+        updateBackgroundColor: (color) => set((state) => ({
+            generalView:{
+                ...state.generalView,
+                backgroundColor: color
+            }
+        })),
     }
-    
 }))

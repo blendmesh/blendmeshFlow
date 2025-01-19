@@ -4,15 +4,24 @@
     padding: 10px;
     background: #F1F3F4;
     color: #454545;
+    width: 250px;
+    min-height: 600px;
 }
 
 .blendmesh-content-block .separator {
-    border-top: 1.5px solid #ccc;
+    border-top: 2px solid #ccc;
     width: 100%;
-    margin-top: 6px;
+    margin-top: 10px;
 }
 
-/* .blendmesh-content-block .element{ 
+.blendmesh-content-block .separator p{
+    /* font-weight: 700; */
+    margin: 0;
+    background-color: #DDD;
+    padding: 3px;
+}
+
+.blendmesh-content-block .element{ 
     display: "flex";
     font-size: small;
     vertical-align: middle;
@@ -27,7 +36,7 @@
   
 .blendmesh-content-block .element label{ 
     font-weight: 600;
-} */
+}
 
 .blendmesh-content-block .col-10 {
     float: left;

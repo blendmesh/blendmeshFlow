@@ -1,8 +1,8 @@
-import Checkbox from "../../components/forms/Checkbox"
-import Form from "../../components/forms/Forms"
-import Number from "../../components/forms/Number"
-import Select, { Position } from "../../components/forms/Select"
-import { useViewportStore } from "../../store/viewport"
+import Checkbox from "../../../components/forms/Checkbox"
+import Form from "../../../components/forms/Forms"
+import Number from "../../../components/forms/Number"
+import Select, { Position } from "../../../components/forms/Select"
+import { useViewportStore } from "../../../store/viewport"
 
 export default function Minimap() {
     const { minimap } = useViewportStore()

@@ -1,14 +1,14 @@
-import { Children, useState } from "react";
 import { Panel } from "@xyflow/react";
 import './contentBlock.css'
 
-export default function ContentBlock( {children} ){
+export default function ContentBlock( {children, position} ){
 
     return (
-        <Panel>
-
-        
+        <Panel
+            position={position}
+            className={"blendmesh-content-block"}
+        >
+            {children}
         </Panel>
-        
     )
 }

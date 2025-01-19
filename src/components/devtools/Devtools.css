@@ -1,7 +1,7 @@
 /* DevTools */
 .react-flow__devtools {
     --border-radius: 4px;
-    --highlight-color: rgba(238, 58, 115, 1);
+    --highlight-color: #333;
     --font: monospace, sans-serif;
    
     border-radius: var(--border-radius);

@@ -1,5 +1,7 @@
-export default function Separator() {
+export default function Separator({label}) {
     return (
-        <div className="separator"></div>
+        <div className="separator">
+            {label && <p>{label}</p>}
+        </div>
     )
 }

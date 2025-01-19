@@ -1,10 +1,10 @@
 export default function Select({ children, label, isValue, onChange }) {
     return (
         <div className='element row'>
-            <div className='col-25'>
+            <div className='col-50'>
                 <label>{label}</label>
             </div>
-            <div className='col-75'>
+            <div className='col-50'>
                 <select
                     value={isValue}
                     onChange={onChange}
