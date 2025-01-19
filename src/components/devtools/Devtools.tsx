@@ -20,7 +20,7 @@ import {
    
     return (
       <div className="react-flow__devtools">
-        <Panel position="top-left">
+        <Panel position="bottom-center">
           <DevToolButton
             setActive={setNodeInspectorActive}
             active={nodeInspectorActive}

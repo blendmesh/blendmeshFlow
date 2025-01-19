@@ -6,7 +6,8 @@ import {
   Background,
   useNodesState,
   useEdgesState,
-  addEdge
+  addEdge,
+  useReactFlow
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -14,7 +15,10 @@ import DevTools from './components/devtools/Devtools';
 import DevMode from './modules/devMode/devMode';
 import ContextMenu from './components/contextMenu/ContextMenu';
 import { useViewportStore } from './store/viewport';
+import { useDndStore } from './store/Dnd';
 import { Panel } from '@xyflow/react';
+import NodePanel from './modules/nodePanel/NodePanel';
+
 
 const initialNodes = [
   { id: '1', type: "input", position: { x: 0, y: 0 }, data: { label: '1', colorMap: "#6ede87"  } },
@@ -29,6 +33,9 @@ const nodeColor = (node) => {
 
 const flowKey = 'example-flow';
 
+let id = 0;
+const getId = () => `dndnode_${id++}`;
+
 export default function App() {
   const {
     background1,
@@ -38,13 +45,17 @@ export default function App() {
     generalView
   } = useViewportStore()
 
+  const {nodeType} = useDndStore()
+
+  const {screenToFlowPosition} = useReactFlow()
+ 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   // save and restore
   const [ rfInstance, setRfInstance] = useState(null);
-  // const Viewport = useReactFlow()
-  const [file, setFile] = useState();
+  const { setViewport } = useReactFlow();
+
   const fileRef = useRef()
 
   // context menu
@@ -72,12 +83,12 @@ export default function App() {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);
         setEdges(flow.edges || []);
-        // setViewport({ x, y, zoom });
+        setViewport({ x, y, zoom });
       }
     };
 
     restoreFlow();
-  }, [setNodes]);
+  }, [setNodes, setViewport]);
 
   const exportData = useCallback(() => {
     if (rfInstance) {
@@ -107,7 +118,7 @@ export default function App() {
           const { x = 0, y = 0, zoom = 1 } = flow.viewport;
           setNodes(flow.nodes || []);
           setEdges(flow.edges || []);
-          // setViewport({ x, y, zoom });
+          setViewport({ x, y, zoom });
         }
       }
     };
@@ -139,7 +150,40 @@ export default function App() {
   // Close the context menu if it's open whenever the window is clicked.
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    // console.log(nodeType)
+    (event) => {
+      event.preventDefault();
+ 
+      // check if the dropped element is valid
+      if (!nodeType) {
+        return;
+      }
+ 
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      const newNode = {
+        id: getId(),
+        nodeType,
+        position,
+        data: { label: `${nodeType} node` },
+      };
+ 
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [nodeType],
+  );
+
   return (
+
     <div style={{ width: '100vw', height: '100vh' }}>
       <ReactFlow
         ref={ref}
@@ -157,6 +201,8 @@ export default function App() {
         fitViewOptions={{ padding: 2 }}
         style={{ backgroundColor: generalView.backgroundColor }}
         onInit={setRfInstance}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
       >
         {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
 
@@ -210,6 +256,7 @@ export default function App() {
             lineWidth={background2.lineWidth}
           />
         }
+        <NodePanel/>
       </ReactFlow>
     </div>
   );
